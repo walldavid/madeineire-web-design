@@ -1,1 +1,8 @@
-Redirect 302 /htaccess-probe-9x7 /
+# Send the bare domain to www, which is what the canonical URL and og:url
+# in index.html already point at. Plesk/nginx handles HTTP -> HTTPS ahead
+# of Apache, so this only ever sees HTTPS requests and cannot ping-pong
+# with that redirect. Matching the exact non-www host (rather than "not
+# www") keeps it inert for any other hostname routed to this docroot.
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^madeineire\.com$ [NC]
+RewriteRule ^(.*)$ https://www.madeineire.com/$1 [R=301,L]
