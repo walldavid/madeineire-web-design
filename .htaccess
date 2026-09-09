@@ -13,7 +13,7 @@ RewriteRule ^(.*)$ https://www.madeineire.com/$1 [R=301,L]
 # subdomains would force HTTPS there and make it unreachable, pinned in
 # visitors' browsers for the full max-age. No preload either, for the same
 # reason -- it requires includeSubDomains and is effectively irreversible.
-# Starting at 300s to confirm the header lands; raise once verified.
+# One year. Still no includeSubDomains/preload, per the note above.
 <IfModule mod_headers.c>
-  Header always set Strict-Transport-Security "max-age=300"
+  Header always set Strict-Transport-Security "max-age=31536000"
 </IfModule>
