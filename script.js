@@ -62,14 +62,35 @@
   stagger(".testimonial-card.reveal", 90);
   stagger(".price-card.reveal", 90);
 
-  // Contact form: basic client-side handling
-  // TODO: this currently submits via mailto (no backend). Replace with a real
-  // form endpoint (e.g. Formspree, Netlify Forms, or a custom API) before launch.
+  // Contact form: submits to contact.php, which sends via the server's
+  // sendmail transport (Plesk/Postfix) rather than reloading the page.
   var form = document.getElementById("contactForm");
   var note = document.getElementById("formNote");
   if (form) {
-    form.addEventListener("submit", function () {
-      note.textContent = "Opening your email client to send this — thanks for reaching out!";
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var button = form.querySelector("button[type=submit]");
+      button.disabled = true;
+      note.textContent = "Sending...";
+
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { "Accept": "application/json" }
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          note.textContent = data.message;
+          if (data.success) {
+            form.reset();
+          }
+        })
+        .catch(function () {
+          note.textContent = "Something went wrong sending your message — please email us directly instead.";
+        })
+        .finally(function () {
+          button.disabled = false;
+        });
     });
   }
 })();

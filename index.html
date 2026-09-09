@@ -293,8 +293,7 @@
         </div>
       </div>
 
-      <!-- TODO: form has no backend yet — currently submits via mailto; wire to a real form endpoint before launch -->
-      <form class="contact-form reveal" id="contactForm" action="mailto:hello@madeineire.com" method="post" enctype="text/plain">
+      <form class="contact-form reveal" id="contactForm" action="contact.php" method="post">
         <label>
           Name
           <input type="text" name="name" required autocomplete="name">
@@ -306,6 +305,11 @@
         <label>
           Tell us about your project
           <textarea name="message" rows="4" required></textarea>
+        </label>
+        <!-- Honeypot field: hidden from real visitors via CSS, bots tend to fill it in -->
+        <label class="hp-field" aria-hidden="true">
+          Company
+          <input type="text" name="company" tabindex="-1" autocomplete="off">
         </label>
         <button type="submit" class="btn btn-primary btn-full">Send message</button>
         <p class="form-note" id="formNote" role="status"></p>
