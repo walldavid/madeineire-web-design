@@ -6,3 +6,14 @@
 RewriteEngine On
 RewriteCond %{HTTP_HOST} ^madeineire\.com$ [NC]
 RewriteRule ^(.*)$ https://www.madeineire.com/$1 [R=301,L]
+
+# HSTS. Deliberately no includeSubDomains: the cert covers only
+# madeineire.com and www.madeineire.com, while wildcard DNS resolves every
+# subdomain and webmail.madeineire.com has no valid cert. Including
+# subdomains would force HTTPS there and make it unreachable, pinned in
+# visitors' browsers for the full max-age. No preload either, for the same
+# reason -- it requires includeSubDomains and is effectively irreversible.
+# Starting at 300s to confirm the header lands; raise once verified.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=300"
+</IfModule>
